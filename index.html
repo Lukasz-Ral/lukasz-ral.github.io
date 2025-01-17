@@ -85,11 +85,16 @@
 
 
 <script>
+    // Function to check and change the SVG color based on element styles
     window.checkAndChangeSvgColor = function(id) {
         try {
+            // Get the element by ID
             var element = document.getElementById(id);
             if (element) {
+                // Define the styles to check
                 var styles = ["borderColor", "outlineColor", "color"];
+                
+                // Map over the styles to extract RGB values and convert them to hex
                 var colorParams = styles.map(style => {
                     var color = window.getComputedStyle(element)[style].match(/^rgb[a]?\((\d+),\s*(\d+),\s*(\d+)/);
                     if (color) {
@@ -98,16 +103,20 @@
                     }
                 }).filter(Boolean).join("&");
 
+                // If color parameters exist, update the element's src attribute
                 if (colorParams) {
                     var src = element.getAttribute("data-src");
                     var newSrc = src + (src.includes("?") ? "&" : "?") + colorParams;
                     if (element.src !== newSrc) {
                         element.src = newSrc;
-                        element.outerHTML = element.outerHTML;
+                        // Instead of using outerHTML, we can use a safer method to force re-render
+                        var newElement = element.cloneNode(true);
+                        element.parentNode.replaceChild(newElement, element);
                     }
                 }
             }
         } catch (error) {
+            // Log any errors to the console
             console.error(error);
         }
     };
