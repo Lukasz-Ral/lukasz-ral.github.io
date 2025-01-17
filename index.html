@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html class="no-js" prefix="og: https://ogp.me/ns#" lang="en">
 	<head>
 		<!-- Preconnect to improve loading performance -->
@@ -85,28 +85,34 @@
 
 
 <script>
-    window.checkAndChangeSvgColor = function(c) {
+    window.checkAndChangeSvgColor = function(id) {
         try {
-            var a = document.getElementById(c);
-            if (a) {
-                c = [["border", "borderColor"], ["outline", "outlineColor"], ["color", "color"]];
-                for (var h, b, d, f = [], e = 0, m = c.length; e < m; e++)
-                    if (h = window.getComputedStyle(a)[c[e][1]].replace(/\s/g, "").match(/^rgb[a]?\(([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})/i)) {
-                        b = "";
-                        for (var g = 1; 3 >= g; g++) b += ("0" + parseInt(h[g], 10).toString(16)).slice(-2);
-                        "0" === b.charAt(0) && (d = parseInt(b.substr(0, 2), 16), d = Math.max(16, d), b = d.toString(16) + b.slice(-4));
-                        f.push(c[e][0] + "=" + b)
+            var element = document.getElementById(id);
+            if (element) {
+                var styles = ["borderColor", "outlineColor", "color"];
+                var colorParams = styles.map(style => {
+                    var color = window.getComputedStyle(element)[style].match(/^rgb[a]?\((\d+),\s*(\d+),\s*(\d+)/);
+                    if (color) {
+                        var hex = color.slice(1, 4).map(c => ("0" + parseInt(c).toString(16)).slice(-2)).join("");
+                        return style.replace("Color", "") + "=" + hex;
                     }
-                if (f.length) {
-                    var k = a.getAttribute("data-src"),
-                        l = k + (0 > k.indexOf("?") ? "?" : "&") + f.join("&");
-                    a.src != l && (a.src = l, a.outerHTML = a.outerHTML)
+                }).filter(Boolean).join("&");
+
+                if (colorParams) {
+                    var src = element.getAttribute("data-src");
+                    var newSrc = src + (src.includes("?") ? "&" : "?") + colorParams;
+                    if (element.src !== newSrc) {
+                        element.src = newSrc;
+                        element.outerHTML = element.outerHTML;
+                    }
                 }
             }
-        } catch (n) {}
+        } catch (error) {
+            console.error(error);
+        }
     };
 </script>
-</head>
+
 <body class="l wt-home ac-s ac-n l-default l-d-none b-btn-r b-btn-s-l b-btn-dn b-btn-bw-1 img-d-fr img-t-u img-h-n line-solid b-e-ds lbox-l  hn-tbg wnd-free-bar-fixed  wnd-fe"><noscript>
 				<iframe
 				 src="https://www.googletagmanager.com/ns.html?id=GTM-542MMSL"
