@@ -21252,8 +21252,8 @@
           let o = s();
           const a = document.querySelector("header");
           let l = o.subType;
-          const c = document.querySelector(".more-text").textContent,
-            u = (e) => {
+         // const c = document.querySelector(".more-text").textContent,
+           // u = (e) => {
               if ((0, i.GI)()) {
                 const t = new Event(e, { bubbles: !0, cancellable: !0 });
                 document.querySelector("#menu > div").dispatchEvent(t);
